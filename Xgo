@@ -6,7 +6,6 @@ def executar():
     MARGE = 20
     W_MAX = 80
     moving = False
-    ultim_costat = 1
 
     xgo.posicio_inicial_estable()
 
@@ -26,23 +25,20 @@ def executar():
                     display.show(Image.HAPPY)
 
                 elif x <= CENTRE - MARGE:
-                    ultim_costat = -1
                     xgo.girar(0x90)
 
                 elif x >= CENTRE + MARGE:
-                    ultim_costat = 1
                     xgo.girar(0x70)
-
-                else:
-                    display.show(Image.SAD)
-                    xgo.girar(0x80)
-                    xgo.caminar(0xC0)
 
             else:
                 xgo.stop()
 
         else:
             display.show(Image.NO)
+            xgo.girar(0x90)
+            sleep(2000)
+            xgo.girar(0x70)
+            sleep(4000)
 
         if must_move and not moving:
             xgo.caminar(0xC0)
@@ -54,9 +50,11 @@ def executar():
 
         if girant and moving:
             xgo.caminar(0x80)
+        
+        if must_move and girant:
+            xgo.caminar(0xC0)
 
-        if ultim_costat == -1:
-            xgo.girar(0x70)
+        sleep(80)
         else:
             xgo.girar(0x90)
 
