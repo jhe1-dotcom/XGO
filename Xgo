@@ -1,0 +1,63 @@
+def executar():
+    husky.knock()
+    husky.set_algorithm(husky.FACE)
+
+    CENTRE = 160
+    MARGE = 20
+    W_MAX = 80
+    moving = False
+    ultim_costat = 1
+
+    xgo.posicio_inicial_estable()
+
+    while True:
+        b = husky.get_block()
+        must_move = False
+        girant = False
+
+        if b and b["id"] == 1:
+            x = b["x"]
+            w = b["w"]
+
+            if w < W_MAX:
+
+                if CENTRE-MARGE < x < CENTRE+MARGE:
+                    must_move = True
+                    display.show(Image.HAPPY)
+
+                elif x <= CENTRE - MARGE:
+                    ultim_costat = -1
+                    xgo.girar(0x90)
+
+                elif x >= CENTRE + MARGE:
+                    ultim_costat = 1
+                    xgo.girar(0x70)
+
+                else:
+                    display.show(Image.SAD)
+                    xgo.girar(0x80)
+                    xgo.caminar(0xC0)
+
+            else:
+                xgo.stop()
+
+        else:
+            display.show(Image.NO)
+
+        if must_move and not moving:
+            xgo.caminar(0xC0)
+            moving = True
+
+        elif not must_move and moving:
+            xgo.stop()
+            moving = False
+
+        if girant and moving:
+            xgo.caminar(0x80)
+
+        if ultim_costat == -1:
+            xgo.girar(0x70)
+        else:
+            xgo.girar(0x90)
+
+        sleep(80)
